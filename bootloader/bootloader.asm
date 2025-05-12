@@ -12,8 +12,33 @@ macro print msg {
                   end if
 }
 
-mov si, hello
-call panicfunc
+.start:
+      mov byte [bootdrv], dl
+      cmp dl, byte 080h
+      jl .notHDD
+.hddFND:
+;AH       41h = номер функции для проверки расширениях[8];
+;DL       индекс диска
+;BX       55AAh
+      mov ah, byte 41h 
+      mov bx, word 55AAh
+      int 13h
+;CF       установить при отсутствии, отчистить при наличии
+;BX       AA55h
+;CX       bit1: доступ к устройству с использованием структуры пакета
+      jc .notLBA
+      cmp bx,0AA55h
+      jne .notLBA
+      test cl, byte 1 
+      jnz .LBAok
+.notLBA:
+      mov si, lbaNotFound
+      jmp panicfunc
+.notHDD:
+      mov si, notHDD
+      jmp panicfunc
+.LBAok:
+       
 
 zavis:
       jmp zavis
@@ -39,9 +64,14 @@ print_string:
 .tyda:
       ret
 
-panicPrefix:  db "BOOT PANIC: ",0
-hello:   db "privet zagryschik",0
-cr:   db 13h,0
+; переменные
+bootdrv      db 0
 
+; сообщения ошибок
+panicPrefix:  db "BOOT PANIC: ",0
+lbaNotFound:  db "Hard drive doesnt support LBA packet struct",0 
+notHDD    db "Not a valid harddrive",0
+
+; пад и сигнатура для биоса
 pad:      db        510      -      ($      -      $$)      dup 0
 bootsig:      db 55h,0AAh
