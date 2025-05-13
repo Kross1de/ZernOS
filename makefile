@@ -1,8 +1,10 @@
 bootloader:
-	mkdir build
 	make -C bootloader all
 
-all: bootloader 
+utils:
+	make -C utils utilities
 
-clean:
-	rm -r build
+build:
+	make -C build image
+
+all: bootloader utils build

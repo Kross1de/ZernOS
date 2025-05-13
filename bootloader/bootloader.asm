@@ -62,8 +62,8 @@ macro print msg {
        mov word [lbaPacket.count], 1 
        mov word [lbaPacket.segment], 80h ;0x80:0x00 -> 0x800
        mov word [lbaPacket.offset], 0 
-       mov word [lbaPacket.sector0], 0  
-       mov word [lbaPacket.sector1], 2 
+       mov word [lbaPacket.sector0], 0
+       mov word [lbaPacket.sector1], 2
        mov word [lbaPacket.sector2], 0 
        mov word [lbaPacket.sector3], 0
        mov ah, 42h 
@@ -111,6 +111,7 @@ print_string:
 ; переменные
 bootdrv:      db 0
 magicBytes:  db 0F4h, 1Ch
+stage_2_start:    dd 0xFFFFFFFF
 
 ; сообщения ошибок
 panicPrefix:  db "BOOT PANIC: ",0

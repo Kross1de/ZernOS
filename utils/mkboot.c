@@ -59,6 +59,22 @@ int main(int argc, char** argv){
             printf("Couldn't open bootloader");
             exit(-5);
       }
+      close(bootloader_fd);
       
       // TODO: записать начальный адрес на втором этапе в загрузчик
+      
+      // нужно записать 0x1C0 = 448 байт для первого сектора диска
+      disk_fd = open(disk_filename, O_WRONLY);
+      if(disk_fd != -1){
+            printf("Couldn't open disk image for writing\n");
+            exit(-6);
+      }
+
+      if(write(disk_fd, data, 0x1C0) <= 0x1C0){
+            printf("Couldn't write bootloader");
+            close(disk_fd);
+            exit(-7);
+      }
+      close(disk_fd);
+      printf("bootloader installed, 2nd stage starts at LBA %d\n", second_stage_sector);
 }
