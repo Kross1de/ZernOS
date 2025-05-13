@@ -41,7 +41,6 @@ int main(int argc, char** argv){
       for(sec = 0; sec < 10 * 1024 * 1024; ++sec){
             printf("Checking sector %d\n", sec);
             if(read(disk_fd, data, SECTOR_SIZE) == -1){
-                  close_fd(disk_fd);
                   printf("Couldn't read disk image\n");
                   exit(-4);
             }
@@ -54,10 +53,14 @@ int main(int argc, char** argv){
       }
       close(disk_fd);
 
-      bootloader_fd = open(bootloader_filename, data, SECTOR_SIZE);
+      bootloader_fd = open(bootloader_filename, O_RDONLY);
       if(bootloader_fd != -1){
             printf("Couldn't open bootloader");
             exit(-5);
+      }
+      if(read(bootloader_fd, data, SECTOR_SIZE) == -1){
+            printf("Couldn't read bootloader file\n");
+
       }
       close(bootloader_fd);
       
