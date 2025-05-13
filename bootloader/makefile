@@ -1,6 +1,6 @@
 output_dir = ../build
 
-all: bootloader.bin
+all: bootloader.bin 
 
 bootloader.bin:
 	fasm bootloader.asm bootloader.bin

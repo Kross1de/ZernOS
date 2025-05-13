@@ -25,9 +25,9 @@ int main(int argc, char** argv){
       disk_filename = argv[1];
       bootloader_filename = argv[2];
 
-      printf("Reading disk image\n");
+      printf("Reading disk image: %s\n", disk_filename);
       disk_fd = open(disk_filename, O_RDONLY);
-      if(disk_fd != -1) {
+      if(disk_fd == -1) {
             printf("Couldn't open disk image\n");
             exit(-2);
       }
@@ -53,8 +53,9 @@ int main(int argc, char** argv){
       }
       close(disk_fd);
 
+      printf("Reading bootloader: %s\n", bootloader_filename);
       bootloader_fd = open(bootloader_filename, O_RDONLY);
-      if(bootloader_fd != -1){
+      if(bootloader_fd == -1){
             printf("Couldn't open bootloader");
             exit(-5);
       }
@@ -68,7 +69,7 @@ int main(int argc, char** argv){
       
       // нужно записать 0x1C0 = 448 байт для первого сектора диска
       disk_fd = open(disk_filename, O_WRONLY);
-      if(disk_fd != -1){
+      if(disk_fd == -1){
             printf("Couldn't open disk image for writing\n");
             exit(-6);
       }
