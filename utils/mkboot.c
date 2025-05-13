@@ -16,6 +16,7 @@ int main(int argc, char** argv){
       unsigned char data[SECTOR_SIZE];
       int second_stage_sector = -1;
       int sec;
+      int readBytes;
 
       if(argc < 3){
             printf("Usage: mkboot disk.img bootloader.bin\n");
@@ -38,10 +39,16 @@ int main(int argc, char** argv){
             exit(-3);
       }
 
+      // 10 * 1024 * 1024 / SECTOR_SIZE = 20480 секторов
       for(sec = 0; sec < 10 * 1024 * 1024; ++sec){
             printf("Checking sector %d\n", sec);
-            if(read(disk_fd, data, SECTOR_SIZE) == -1){
+            readBytes = read(disk_fd, data, SECTOR_SIZE);
+            if(readBytes == -1){
                   printf("Couldn't read disk image\n");
+                  exit(-4);
+            }
+            if(readBytes == 0){
+                  printf("Couldn't find magic bytes\n");
                   exit(-4);
             }
 
