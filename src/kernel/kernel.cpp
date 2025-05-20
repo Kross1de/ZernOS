@@ -1,11 +1,12 @@
-extern "C" void kernel_main() {
-    const char* hello = "Zernishko OS v0.1";
-    volatile unsigned char* video_memory = (volatile unsigned char*) 0xb8000;
-    for (int i = 0; hello[i] != '\0'; ++i) {
-        video_memory[i * 2] = hello[i];
-        video_memory[i * 2 + 1] = 0x0F;  // Белый текст на черном фоне
-    }
+#include "kernel_io/stdio.cpp"
+#include "kernel_io/stdtimers.cpp"
 
-    // Бесконечный цикл, чтобы остановить выполнение ядра
-    while (1) {}
+extern "C" void kernel_main() {
+  print("Starting kernel...")      ;
+  endl();
+  sleep(1);
+  clear();
+  print("ZernOS | 0.1", Color::DarkCyan);
+  // Бесконечный цикл, чтобы остановить выполнение ядра
+  while (1) {}
 }
