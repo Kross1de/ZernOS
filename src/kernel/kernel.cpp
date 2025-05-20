@@ -1,12 +1,22 @@
-#include "kernel_io/stdio.cpp"
+//#include "kernel_io/stdio.cpp"
 #include "kernel_io/stdtimers.cpp"
+#include "utils/memory/memory_management.cpp"
 
 extern "C" void kernel_main() {
-  print("Starting kernel...")      ;
-  endl();
-  sleep(1);
-  clear();
-  print("ZernOS | 0.1", Color::DarkCyan);
-  // Бесконечный цикл, чтобы остановить выполнение ядра
-  while (1) {}
+	println("Starting kernel...");
+	initialize_memory();
+	sleep(2);
+	clear();
+	println("ZernishkoOS (ALPHA)", Color::LightBlue);
+	
+	void* ptr = _kmalloc(100,0);
+	if(ptr == nullptr) {
+		println("Failed to allocate memory!");
+	} else{
+		println("allocated memory: ");
+		print_size_t((size_t)ptr);
+	}
+	//delete[] ptr;
+	
+	while (1) {}
 }
